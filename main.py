@@ -8,7 +8,7 @@ import time
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-app = Flask(_name_)
+app = Flask(__name__)
 app.json.sort_keys = False
 
 limiter = Limiter(
