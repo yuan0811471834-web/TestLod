@@ -93,7 +93,8 @@ def login_check():
     })
 
 
-if _name_ == "_main_":
+# แก้ไขจาก _name_ เป็น __name__ เรียบร้อยครับ
+if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=8080,
