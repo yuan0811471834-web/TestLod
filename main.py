@@ -5,11 +5,21 @@ import secrets
 import string
 import time
 
-app = Flask(__name__)
-# แสดง JSON ตามลำดับที่เขียนไว้ใน Dictionary
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+app = Flask(_name_)
 app.json.sort_keys = False
 
-WORK_FACTOR = 200_000 ##---------##
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
+
+# คืนค่าตัวเลขชุดดั้งเดิมสำหรับนำไปวิเคราะห์ผลสรุปของ k6
+WORK_FACTOR = 2_000_000
 PASSWORD_LENGTH = 10
 SALT_SIZE_BYTES = 16
 
@@ -41,6 +51,7 @@ def home():
 
 
 @app.route("/login-check")
+@limiter.limit("5 per second")
 def login_check():
     start_time = time.perf_counter()
 
@@ -82,7 +93,7 @@ def login_check():
     })
 
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     app.run(
         host="0.0.0.0",
         port=8080,
